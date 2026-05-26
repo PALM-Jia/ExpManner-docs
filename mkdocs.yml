@@ -1,0 +1,48 @@
+site_name: ExpManner
+site_description: Public documentation for the ExpManner MATLAB clustering experiment framework.
+site_url: https://palm-jia.github.io/ExpManner-docs/
+repo_url: https://github.com/PALM-Jia/ExpManner-docs
+repo_name: PALM-Jia/ExpManner-docs
+
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - search.suggest
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Installation: installation.md
+  - Concepts: concepts.md
+  - Model Interface: model-interface.md
+  - Dataset Guide: dataset-guide.md
+  - Result Management: result-management.md
+  - Tutorials:
+      - First Benchmark: tutorials/first-benchmark.md
+      - Custom Model: tutorials/custom-model.md
+      - Ensemble Clustering: tutorials/ensemble-clustering.md
+  - Examples: examples.md
+  - API Reference: api-reference.md
+  - Contributing: contributing.md
+  - Citation: citation.md
+  - Security: security.md
+  - FAQ: faq.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
