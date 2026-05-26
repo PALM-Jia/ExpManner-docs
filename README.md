@@ -19,6 +19,14 @@ python -m venv .venv
 .\.venv\Scripts\python -m mkdocs serve
 ```
 
+Before opening a pull request:
+
+```powershell
+.\.venv\Scripts\python -m mkdocs build --strict
+git diff --check
+rg -n --hidden --glob '!site/**' --glob '!.git/**' --glob '!.venv/**' 'token|secret|password|credential|unpublished'
+```
+
 ## Deployment
 
 The site is deployed to GitHub Pages with GitHub Actions.
