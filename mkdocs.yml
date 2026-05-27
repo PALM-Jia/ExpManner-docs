@@ -30,6 +30,7 @@ nav:
   - 概念解释:
       - 核心概念: concepts.md
       - 模型接口: model-interface.md
+      - 设计决策记录: design-decisions.md
   - 参考:
       - API 参考: api-reference.md
       - 常见问题: faq.md

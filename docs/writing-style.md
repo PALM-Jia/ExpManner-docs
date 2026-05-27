@@ -81,3 +81,5 @@ validateDocumentation(GenerateLiveScripts=true)
 `.mlx` 只作为组内教学展示材料；提交前必须检查输出缓存中没有本机路径、私有数据位置、未发表结果或内部 benchmark。
 
 当前不把 MATLAB 文档示例验证接入 public docs GitHub Actions；原因是 public docs repo 不包含 private code repo，也没有稳定的 MATLAB license runner。
+
+如果文档改动涉及架构选择、接口入口或结果目录约定，应同时检查 [设计决策记录](design-decisions.md)。如果文档改动涉及 API 列表，应先在 private code repo 中生成 API 草稿，再人工同步公开安全子集。

@@ -10,7 +10,7 @@
 | 文档仓库 | `PALM-Jia/ExpManner-docs`，public |
 | 文档语言 | 只维护中文 |
 | 当前代码状态 | v0.2 runnable skeleton |
-| 当前文档状态 | v0.3 已完成，v0.4 已完成 |
+| 当前文档状态 | v0.3 已完成，v0.4 已完成，v0.5 已完成 |
 
 ## 稳定接口
 
@@ -72,14 +72,33 @@ v0.4 的目标是让核心教程不只是“可读”，而是可运行、可复
 - public docs 只展示公开安全结果，不保存依赖 private repo 的完整 live script。
 - 运行结果必须先检查是否包含本机路径、私有数据名、内部 benchmark 或未发表结果。
 
+## v0.5 文档可维护性升级
+
+v0.5 的目标是降低长期维护成本，减少架构误解和 API 参考漂移。
+
+完成内容：
+
+- M14 设计决策记录已完成：新增设计决策页面，解释普通文件夹风格、`ModelBase` 可选性、class-folder、结果目录和 public/private 分离。
+- M14 流程图已完成：新增训练流程、模型接口调用链和结果目录 Mermaid 图。
+- M15 半自动 API 维护已完成：private code repo 新增 API 草稿生成脚本；public API 页记录人工同步规则。
+- M16 版本、变更记录和内部边界已完成：private code repo 新增 `docs/internal/README.md`，public docs 记录内部材料只放 private repo。
+- M17 文档审查清单已完成：PR 模板、贡献指南和写作规范已补充设计决策、API 草稿、Live Script 和公开边界检查项。
+
+## 变更记录
+
+| 版本 | 状态 | 重点变化 |
+| --- | --- | --- |
+| v0.5 | 已完成 | 增加设计决策记录、Mermaid 图、API 草稿机制、内部文档边界和审查清单 |
+| v0.4 | 已完成 | 增加 companion scripts、Live Script、实测输出嵌入和统一验证入口 |
+| v0.3 | 已完成 | 全中文化、信息架构、示例库、故障排查和质量门禁 |
+
 ## 后续计划
 
-v0.4 之后可继续考虑：
+v0.5 之后可继续考虑：
 
-1. 半自动扫描 MATLAB public methods，降低 API 参考漂移风险。
-2. 增加设计决策记录页面，解释 package namespace、`ModelBase`、class-folder 和结果目录等选择。
-3. 补充 Mermaid 图，解释训练流程、结果目录和模型接口调用流程。
-4. 等 GitHub Actions 相关 action 发布新 major 后，移除 Node.js 20 annotation 的临时规避。
+1. 如果有稳定 MATLAB runner 和 license 策略，再评估是否把 private 文档示例验证接入 CI。
+2. 等 GitHub Actions 相关 action 发布新 major 后，移除 Node.js 20 annotation 的临时规避。
+3. 根据实际论文和组内项目需要，逐步补充 private `docs/internal/`，public docs 只同步公开安全摘要。
 
 ## 非目标
 

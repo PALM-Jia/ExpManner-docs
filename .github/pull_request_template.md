@@ -7,6 +7,9 @@
 - [ ] `.\scripts\check-docs.ps1`
 - [ ] 修改导航或 workflow 后已检查 GitHub Pages workflow
 - [ ] 如改动 MATLAB 示例代码，已在 private code repo 中验证
+- [ ] 如改动示例输出，已运行 `run("examples/docs/validateDocumentation.m")`
+- [ ] 如改动 API 参考，已生成 API 草稿并人工同步公开安全子集
+- [ ] 如改动 Live Script，已检查 `.mlx` 输出缓存
 
 ## 公开安全检查
 
@@ -22,3 +25,4 @@
 - [ ] API 名称、MATLAB 代码、命令和仓库名保留英文原文
 - [ ] 内容与 private code repo canonical docs 不冲突
 - [ ] 里程碑状态变化时已同步 private code repo 的 `doc_plan.md`
+- [ ] 架构选择、接口入口或结果目录变化时已检查设计决策记录

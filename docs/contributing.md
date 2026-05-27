@@ -58,6 +58,16 @@ run("examples/docs/validateDocumentation.m")
 
 代码改动还应运行 MATLAB Code Analyzer 覆盖 core、class-folder、examples 和 tests。
 
+## 文档审查清单
+
+文档 PR 至少检查：
+
+- 是否需要更新 [设计决策记录](design-decisions.md)。
+- 是否重跑 `validateDocumentation`。
+- 是否需要生成 API 草稿，并人工同步 [API 参考](api-reference.md)。
+- 是否检查 `.mlx` 输出缓存。
+- 是否确认 public docs 没有本机路径、私有数据位置、未发表结果或内部 benchmark。
+
 ## 文档同步
 
 private code repo 中这些文件是事实来源：
@@ -70,8 +80,11 @@ private code repo 中这些文件是事实来源：
 - `CITATION.cff`
 - `docs/lrdsc-audit.md`
 - `docs/utils-inventory.md`
+- `docs/internal/README.md`
 
 public docs 只同步公开安全子集。发现冲突时，先修正 private canonical docs，再同步 public docs。
+
+内部数据准备、真实 benchmark 和私有模型案例只放在 private code repo 的 `docs/internal/`。public docs 只记录公开安全摘要和入口说明。
 
 ## 中文文档要求
 

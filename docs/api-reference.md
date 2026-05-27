@@ -2,6 +2,14 @@
 
 本页是轻量 API 索引。private source link 需要 PALM Jia 授权访问；public docs 不复制大量私有源码。
 
+维护者可以在 private code repo 中生成 API 草稿，用于人工核对本页是否漂移：
+
+```matlab
+run("examples/docs/exportApiReferenceDraft.m")
+```
+
+草稿默认写入 `results/docs-api-draft/api-reference-draft.md`，该文件是本地维护 artifact，不提交 Git。本页只同步公开安全的轻量索引。
+
 ## 核心类总览
 
 | 类 | 职责 | 常用入口 |
