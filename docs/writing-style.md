@@ -62,3 +62,11 @@ TaskManner.train(ds, mdl, NumTrials=3)
 ```
 
 该脚本会运行 MkDocs strict build、空白检查、中文化扫描、敏感信息扫描和本地链接检查。
+
+更新教程代码或展示输出前，还需要在 private code repo 中运行文档示例统一入口：
+
+```matlab
+run("examples/docs/runAllDocExamples.m")
+```
+
+只有输出 `DOC_ALL_EXAMPLES_OK`，并确认展示内容没有本机路径、私有数据位置或内部 benchmark 后，才能把结果同步到 public docs。

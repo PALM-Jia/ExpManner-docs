@@ -2,6 +2,23 @@
 
 本页按任务组织示例，而不是只按文件名罗列。示例代码只使用公开安全数据和占位路径。
 
+## 可运行 companion scripts
+
+private code repo 中的核心文档示例有对应 companion script，可用于复核 public docs 中展示的代码和输出。
+
+```matlab
+run("examples/docs/runAllDocExamples.m")
+```
+
+运行成功时会输出 `DOC_ALL_EXAMPLES_OK`。这些脚本可能在本地生成 `results/`，生成物不提交。
+
+| 任务 | companion script | 成功 marker |
+| --- | --- | --- |
+| 最小 benchmark | `examples/docs/firstBenchmarkDoc.m` | `DOC_FIRST_BENCHMARK_OK` |
+| 结果记录与读取 | `examples/docs/resultManagementDoc.m` | `DOC_RESULT_MANAGEMENT_OK` |
+| 多数据集与多模型 | `examples/docs/multiBenchmarkDoc.m` | `DOC_MULTI_BENCHMARK_OK` |
+| ensemble workflow | `examples/docs/ensembleWorkflowDoc.m` | `DOC_ENSEMBLE_WORKFLOW_OK` 或 `DOC_ENSEMBLE_WORKFLOW_SKIPPED` |
+
 ## Iris + KMeans
 
 用途：验证最小 dataset-model benchmark。

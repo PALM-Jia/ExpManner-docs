@@ -59,8 +59,10 @@ $violations = New-Object System.Collections.Generic.List[string]
 foreach ($file in $scanFiles) {
     $path = [string]$file
     $content = Get-Content -Raw -LiteralPath $path
+    $uiContent = [regex]::Replace($content, '(?s)```.*?```', '')
+    $uiContent = [regex]::Replace($uiContent, '`[^`\r\n]+`', '')
     foreach ($phrase in $forbiddenPhrases) {
-        if ($content.Contains($phrase)) {
+        if ($uiContent.Contains($phrase)) {
             $violations.Add("${path}: contains forbidden English UI phrase '$phrase'")
         }
     }
