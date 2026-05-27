@@ -70,3 +70,12 @@ run("examples/docs/runAllDocExamples.m")
 ```
 
 只有输出 `DOC_ALL_EXAMPLES_OK`，并确认展示内容没有本机路径、私有数据位置或内部 benchmark 后，才能把结果同步到 public docs。
+
+更新 `.mlx` Live Script 时，先修改 private code repo 中的 `examples/live/sources/*.m`，再重新生成：
+
+```matlab
+addpath(fullfile(pwd, "examples", "live"))
+generateLiveScripts(Execute=true)
+```
+
+`.mlx` 只作为组内教学展示材料；提交前必须检查输出缓存中没有本机路径、私有数据位置、未发表结果或内部 benchmark。

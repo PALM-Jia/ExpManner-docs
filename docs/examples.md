@@ -19,6 +19,26 @@ run("examples/docs/runAllDocExamples.m")
 | 多数据集与多模型 | `examples/docs/multiBenchmarkDoc.m` | `DOC_MULTI_BENCHMARK_OK` |
 | ensemble workflow | `examples/docs/ensembleWorkflowDoc.m` | `DOC_ENSEMBLE_WORKFLOW_OK` 或 `DOC_ENSEMBLE_WORKFLOW_SKIPPED` |
 
+## Live Script 辅助材料
+
+private code repo 还包含面向组内教学的 `.mlx` Live Script。它们不是事实源；事实源仍是 `examples/docs/*.m` 和 `examples/live/sources/*.m`。
+
+| 任务 | Live Script | 可审阅源文件 |
+| --- | --- | --- |
+| 最小 benchmark | `examples/live/firstBenchmark.mlx` | `examples/live/sources/firstBenchmarkLiveSource.m` |
+| 结果记录与读取 | `examples/live/resultManagement.mlx` | `examples/live/sources/resultManagementLiveSource.m` |
+| 多数据集与多模型 | `examples/live/multiBenchmark.mlx` | `examples/live/sources/multiBenchmarkLiveSource.m` |
+| ensemble workflow | `examples/live/ensembleWorkflow.mlx` | `examples/live/sources/ensembleWorkflowLiveSource.m` |
+
+维护者可以在 private code repo 中运行：
+
+```matlab
+addpath(fullfile(pwd, "examples", "live"))
+generateLiveScripts(Execute=true)
+```
+
+生成或更新 `.mlx` 后，需要确认其中没有本机路径、私有数据位置或内部 benchmark。
+
 ## Iris + KMeans
 
 用途：验证最小 dataset-model benchmark。
