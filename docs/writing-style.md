@@ -66,16 +66,18 @@ TaskManner.train(ds, mdl, NumTrials=3)
 更新教程代码或展示输出前，还需要在 private code repo 中运行文档示例统一入口：
 
 ```matlab
-run("examples/docs/runAllDocExamples.m")
+run("examples/docs/validateDocumentation.m")
 ```
 
-只有输出 `DOC_ALL_EXAMPLES_OK`，并确认展示内容没有本机路径、私有数据位置或内部 benchmark 后，才能把结果同步到 public docs。
+只有输出 `DOC_DOCUMENTATION_VALIDATION_OK`，并确认展示内容没有本机路径、私有数据位置或内部 benchmark 后，才能把结果同步到 public docs。
 
 更新 `.mlx` Live Script 时，先修改 private code repo 中的 `examples/live/sources/*.m`，再重新生成：
 
 ```matlab
-addpath(fullfile(pwd, "examples", "live"))
-generateLiveScripts(Execute=true)
+addpath(fullfile(pwd, "examples", "docs"))
+validateDocumentation(GenerateLiveScripts=true)
 ```
 
 `.mlx` 只作为组内教学展示材料；提交前必须检查输出缓存中没有本机路径、私有数据位置、未发表结果或内部 benchmark。
+
+当前不把 MATLAB 文档示例验证接入 public docs GitHub Actions；原因是 public docs repo 不包含 private code repo，也没有稳定的 MATLAB license runner。

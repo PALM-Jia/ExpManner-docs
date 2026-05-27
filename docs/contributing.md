@@ -50,6 +50,12 @@ runtests("tests")
 run("examples/smokeExpManner.m")
 ```
 
+如果 PR 更新教程代码、示例输出或 Live Script 辅助材料，还需要运行文档材料统一验证入口：
+
+```matlab
+run("examples/docs/validateDocumentation.m")
+```
+
 代码改动还应运行 MATLAB Code Analyzer 覆盖 core、class-folder、examples 和 tests。
 
 ## 文档同步

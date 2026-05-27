@@ -10,7 +10,7 @@
 | 文档仓库 | `PALM-Jia/ExpManner-docs`，public |
 | 文档语言 | 只维护中文 |
 | 当前代码状态 | v0.2 runnable skeleton |
-| 当前文档状态 | v0.3 已完成，v0.4 M10-M12 已完成 |
+| 当前文档状态 | v0.3 已完成，v0.4 已完成 |
 
 ## 稳定接口
 
@@ -47,12 +47,14 @@ v0.4 的目标是让核心教程不只是“可读”，而是可运行、可复
 - M11 Live Script 辅助材料已完成：private code repo 已新增 `examples/live/*.mlx`、`examples/live/sources/*.m` 和 `generateLiveScripts.m`。
 - 已用独立 MATLAB batch 进程生成并执行保存 Live Script，成功输出 `DOC_M11_BATCH_LIVE_EXECUTION_OK`。
 - M12 公开安全输出嵌入已完成：public docs 已补充 summary 表格、规范化 result tree、ensemble shape 摘要和两个实测错误摘录。
-- public docs 已记录 companion script、Live Script 和成功 marker；后续 M13 将收口维护闭环。
+- M13 维护闭环已完成：private code repo 已新增 `examples/docs/validateDocumentation.m`，成功时输出 `DOC_DOCUMENTATION_VALIDATION_OK`。
+- public docs 已记录 companion script、Live Script、统一验证入口和成功 marker。
 
-计划内容：
+维护入口：
 
-- 在 public docs 中标注每个示例对应的 companion script、Live Script 和验证 marker。
-- 不做组内 onboarding 练习题；v0.4 聚焦可运行案例材料，不设计练习作业。
+- 更新 public docs 的示例输出前，在 private code repo 运行 `run("examples/docs/validateDocumentation.m")`。
+- 更新 `.mlx` 前，先修改 `examples/live/sources/*.m`，再运行 `validateDocumentation(GenerateLiveScripts=true)`。
+- 暂不把 MATLAB 示例验证接入 public docs GitHub Actions；public docs repo 不包含 private code repo，也没有稳定的 MATLAB license runner。
 
 建议优先材料：
 

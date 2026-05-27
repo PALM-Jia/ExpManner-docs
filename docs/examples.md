@@ -7,10 +7,10 @@
 private code repo 中的核心文档示例有对应 companion script，可用于复核 public docs 中展示的代码和输出。
 
 ```matlab
-run("examples/docs/runAllDocExamples.m")
+run("examples/docs/validateDocumentation.m")
 ```
 
-运行成功时会输出 `DOC_ALL_EXAMPLES_OK`。这些脚本可能在本地生成 `results/`，生成物不提交。
+运行成功时会输出 `DOC_ALL_EXAMPLES_OK` 和 `DOC_DOCUMENTATION_VALIDATION_OK`。这些脚本可能在本地生成 `results/`，生成物不提交。
 
 | 任务 | companion script | 成功 marker | 实测公开输出 |
 | --- | --- | --- | --- |
@@ -33,8 +33,14 @@ private code repo 还包含面向组内教学的 `.mlx` Live Script。它们不�
 维护者可以在 private code repo 中运行：
 
 ```matlab
-addpath(fullfile(pwd, "examples", "live"))
-generateLiveScripts(Execute=true)
+run("examples/docs/validateDocumentation.m")
+```
+
+如果需要重新生成 `.mlx`，在普通 MATLAB session 或 batch 进程中运行：
+
+```matlab
+addpath(fullfile(pwd, "examples", "docs"))
+validateDocumentation(GenerateLiveScripts=true)
 ```
 
 生成或更新 `.mlx` 后，需要确认其中没有本机路径、私有数据位置或内部 benchmark。
