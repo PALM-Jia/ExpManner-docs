@@ -1,38 +1,54 @@
-# Concepts
+# 核心概念
 
-Status: Minimum usable
+ExpManner 把聚类实验拆成少量稳定对象。理解这些对象后，接入新模型和复现实验会简单很多。
 
-ExpManner organizes clustering experiments around a small set of stable
-objects. The typical workflow is:
+## 主流程
 
 ```text
 Dataset -> Initializer -> Model.train -> ModelStats -> Metricer -> Recoder
                                   \-------------------------------> Loader
 ```
 
+含义：
+
+- `Dataset` 负责数据、标签、可选约束和可选图。
+- `Initializer` 根据模型声明生成每个 trial 的 `InitState`。
+- 模型的 `train(ds, initState)` 产出 `ModelStats`。
+- `Metricer` 从 `ModelStats` 中取标签并计算指标。
+- `Recoder` 在 `Record=true` 时写入结构化结果。
+- `Loader` 读取 manifest、summary、index 和 best stats。
+
 ## Dataset
 
-`Dataset` owns data loading, preprocessing, labels, optional constraints, and
-optional graph construction. Data matrices use the shape `[features, samples]`.
-Ground-truth labels are stored in `gnd` as a `1 x n` row vector.
+`Dataset` 是数据入口。核心约定：
 
-ExpManner supports two dataset forms:
+- `ds.X` 通常是 `[features, samples]`。
+- `ds.gnd` 是 `1 x n` 的标签行向量。
+- `Kind="feature"` 表示普通特征数据。
+- `Kind="ensemble"` 表示集成聚类数据。
 
-- `Kind="feature"` for ordinary feature matrices.
-- `Kind="ensemble"` for ensemble clustering data with base clustering labels.
+常用调用：
 
-## Initializer and InitState
+```matlab
+ds = Dataset("Iris", Normalize="range");
+datasets = Dataset(["Iris", "Wine"], Normalize="range");
+names = Dataset.names();
+```
 
-`Initializer` creates one `InitState` per trial. A model declares what it needs
-through `requiredInitFields()`, for example `"labels"`, `"membership"`, or
-`"factors.V"`.
+## InitState
 
-Initialization uses local random streams so repeated trials can be reproduced
-from seed information recorded in manifests.
+模型通过 `requiredInitFields()` 声明需要哪些初始化变量，例如：
 
-## Model Interface
+```matlab
+fields = "labels";
+fields = ["factors.U", "factors.V"];
+```
 
-A model can use duck typing. It only needs:
+`Initializer` 会为每个 trial 创建一个 `InitState`，并记录 seed、trial 编号和初始化字段。这样 summary 与 manifest 能追踪随机性来源。
+
+## 模型接口
+
+模型可以采用 duck typing，只要提供：
 
 ```matlab
 mdl.name
@@ -40,39 +56,52 @@ mdl.requiredInitFields()
 mdl.train(ds, initState)
 ```
 
-The `train` method returns a `ModelStats` object. New models may optionally
-inherit from `ModelBase` to reduce boilerplate, but inheritance is not required.
+新模型也可以继承 `ModelBase`，只实现 protected `fit(ds, initState)`。`ModelBase` 是便利层，不是强制要求。
 
-## ModelStats and Metricer
+## ModelStats
 
-`ModelStats` records training history, model options, predictions, and extra
-model outputs. Clustering labels can come from:
+`ModelStats` 记录一次训练的结果：
 
-- `prediction.labels`
-- `prediction.membership`
-- `prediction.embedding`
-- `prediction.affinity`
+- 模型名和数据集名。
+- 迭代历史 `history`。
+- 聚类输出 `prediction`。
+- 参数、选项和额外信息。
+- 训练时间。
 
-`Metricer` evaluates default clustering metrics such as `ACC`, `NMI`, `PUR`,
-`ARI`, `F1`, `Pre`, and `Rec`.
+`prediction` 至少需要提供一种可转成标签的字段：
 
-## Recoder and Loader
+- `labels`
+- `membership`
+- `embedding`
+- `affinity`
 
-When `Record=true`, `Recoder` writes structured artifacts under the selected
-`ResultRoot`:
+## trial、best trial 和 summary
 
-```text
-results/
-  index.csv
-  train/<model>/<dataset>/<runId>/
-    manifest.json
-    bestStats.mat
-    runSummary.csv
-    trialMetrics.csv
-  experiments/<experimentName>/
-    index.csv
-    summary.csv
+`TaskManner.train(..., NumTrials=3)` 会运行 3 次初始化 trial。`Metricer` 计算每次 trial 的指标，并默认按 `ACC` 选出 best trial。
+
+返回值：
+
+```matlab
+[bestStats, summary, metricer] = TaskManner.train(ds, mdl, NumTrials=3);
 ```
 
-`Loader` reads manifests, indexes, experiment summaries, run summaries, and best
-trial artifacts. ExpManner does not create a root-level `results/summary.csv`.
+- `bestStats`：best trial 的完整 `ModelStats`。
+- `summary`：dataset-model 级别的指标汇总。
+- `metricer`：本次评估使用的指标器。
+
+## 记录与读取
+
+启用记录：
+
+```matlab
+[bestStats, summary] = TaskManner.train(ds, mdl, ...
+    NumTrials=3, Record=true, ExperimentName="firstBenchmark");
+```
+
+读取实验汇总：
+
+```matlab
+T = Loader.loadExperimentSummary(ExperimentName="firstBenchmark");
+```
+
+结果目录细节见 [结果管理](result-management.md)。

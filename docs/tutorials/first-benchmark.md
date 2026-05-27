@@ -1,60 +1,52 @@
-# First Benchmark
+# 第一个 benchmark
 
-Status: Minimum usable
+本教程用 `Iris + DemoModels.KMeans` 完成第一次可记录 benchmark。
 
-This tutorial runs a small public-safe benchmark with `Iris` and
-`DemoModels.KMeans`.
+## 目标
 
-## 1. Prepare the MATLAB Session
+完成后你将能够：
 
-Replace `<path-to-ExpManner>` with your local checkout path.
+- 加载公开安全小数据集 `Iris`。
+- 运行 3 次 trial。
+- 启用 `Record=true` 写入结果。
+- 使用 `Loader` 读取 experiment summary。
+
+## 前置条件
+
+- 已完成 [安装](../installation.md)。
+- MATLAB 当前会话能解析 `Dataset` 和 `DemoModels.KMeans`。
+- 已知道 `<path-to-ExpManner>`。
+
+## 完整代码
 
 ```matlab
 expRoot = "<path-to-ExpManner>";
 addpath(expRoot);
 addpath(fullfile(expRoot, "examples"));
-```
 
-## 2. Load a Dataset
-
-```matlab
 ds = Dataset("Iris", Normalize="range");
-```
-
-`Iris` is small enough for a first benchmark and does not require private data.
-
-## 3. Create a Demo Model
-
-```matlab
 mdl = DemoModels.KMeans();
-```
 
-The demo model exposes the standard model interface and requests random label
-initialization.
-
-## 4. Run Three Trials
-
-```matlab
-[bestStats, summary] = TaskManner.train(ds, mdl, NumTrials=3);
-disp(summary)
-```
-
-The returned `summary` table contains one row for the dataset-model pair and
-reports metrics such as `ACC`, `NMI`, `PUR`, `ARI`, `F1`, `Pre`, and `Rec`.
-
-## 5. Record Results
-
-To write a local result folder, pass `Record=true` and a local `ResultRoot`:
-
-```matlab
 resultRoot = fullfile(expRoot, "results", "docs-first-benchmark");
-[bestStats, summary] = TaskManner.train(ds, mdl, NumTrials=3, ...
-    Record=true, ResultRoot=resultRoot, ExperimentName="firstBenchmark");
+[bestStats, summary] = TaskManner.train(ds, mdl, ...
+    NumTrials=3, ...
+    Record=true, ...
+    ResultRoot=resultRoot, ...
+    ExperimentName="firstBenchmark");
+
+disp(summary)
+
+T = Loader.loadExperimentSummary(resultRoot, ExperimentName="firstBenchmark");
+disp(T)
 ```
 
-The generated files are local experiment artifacts. Keep them out of Git.
+## 预期输出
 
-Expected structure:
+- `summary` 是一行 table。
+- `T` 能读取刚写入的 experiment summary。
+- `bestStats.getClusterLabels()` 能返回 `Iris` 样本的聚类标签。
+
+## 生成文件
 
 ```text
 results/docs-first-benchmark/
@@ -69,12 +61,18 @@ results/docs-first-benchmark/
     summary.csv
 ```
 
-## 6. Read the Experiment Summary
+这些文件是本地实验 artifact，不要提交到 Git。
 
-```matlab
-T = Loader.loadExperimentSummary(resultRoot, ExperimentName="firstBenchmark");
-disp(T)
-```
+## 常见错误
 
-This confirms that the recorded experiment summary can be loaded without
-opening the heavy `bestStats.mat` artifact.
+| 现象 | 原因 | 处理 |
+| --- | --- | --- |
+| 找不到 `DemoModels.KMeans` | 没有加入 `examples` | 运行 `addpath(fullfile(expRoot, "examples"))` |
+| `summary.csv` 读取不到 | `ResultRoot` 或 `ExperimentName` 不一致 | 记录和读取时使用同一变量 |
+| `results/` 出现在 Git 状态中 | benchmark 写入了本地 artifact | 不提交 `results/` |
+
+## 下一步
+
+- 想接入自己的算法，读 [自定义模型](custom-model.md)。
+- 想理解结果目录，读 [结果管理](../result-management.md)。
+- 想跑更多组合，读 [示例库](../examples.md)。

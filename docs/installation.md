@@ -1,30 +1,28 @@
-# Installation
+# 安装
 
-Status: Minimum usable
+ExpManner 以源码目录形式在 MATLAB 中使用，不需要安装成 toolbox，也不使用 package namespace。
 
-ExpManner is a source checkout used from MATLAB path. It is not installed as a
-toolbox and does not require a `+ExpManner` package namespace.
+## 前置条件
 
-## MATLAB Version
+- MATLAB。当前已验证开发环境为 R2025b，R2024b 是最低支持目标。
+- PALM Jia 授权的 GitHub 账号。
+- private code repo `PALM-Jia/ExpManner` 的本地 checkout。
 
-Current development validation uses MATLAB R2025b. The minimum-support goal is
-MATLAB R2024b, but local R2024b environment issues have been observed and should
-be treated as environment blockers unless reproduced in a clean install.
+R2024b 如果出现 `addpath` 等基础函数无法解析，应先按 MATLAB 环境问题处理，不直接记为框架兼容性失败。
 
-## Get the Code
+## 获取代码
 
-The source repository is private:
+代码仓库地址：
 
 ```text
 https://github.com/PALM-Jia/ExpManner
 ```
 
-Access requires PALM Jia authorization. Clone the repository to a local folder,
-then use that folder as `<path-to-ExpManner>` in examples.
+克隆后，把本地目录记为 `<path-to-ExpManner>`。公开文档中统一使用这个占位符，不写本机绝对路径。
 
-## Path Setup
+## MATLAB path 设置
 
-For a normal session:
+普通使用场景：
 
 ```matlab
 expRoot = "<path-to-ExpManner>";
@@ -32,17 +30,23 @@ addpath(expRoot);
 addpath(fullfile(expRoot, "examples"));
 ```
 
-Library code does not call `addpath` for you. Scripts and tests add paths only
-at their entry point.
+说明：
 
-## Data Root
+- 框架核心代码不会自动调用 `addpath`。
+- demo model 位于 `examples` 下，因此运行教程时需要额外加入 `examples`。
+- 加入 path 后直接使用短类名，例如 `Dataset`、`TaskManner`、`ModelStats`。
 
-Built-in dataset loaders use the framework's default data-root convention. Keep
-private datasets outside this public documentation. When documenting a private
-project, describe the expected data shape and variables without exposing local
-paths or unpublished data locations.
+## 数据目录
 
-## Quick Health Check
+默认数据根目录由框架按约定推断。公开教程只使用 `Iris` 这类小型公开安全示例。
+
+如果项目需要私有数据：
+
+- 在内部文档或 private repo 中记录具体位置。
+- public docs 只描述数据形状、变量名和加载方式。
+- 不把私有路径、私有 `.mat` 文件或生成结果放进 public docs repo。
+
+## 健康检查
 
 ```matlab
 expRoot = "<path-to-ExpManner>";
@@ -55,4 +59,6 @@ mdl = DemoModels.KMeans();
 disp(summary)
 ```
 
-If this succeeds, the core path setup is working.
+如果这段代码能显示 summary table，说明基础路径和 demo model 都已可用。
+
+下一步阅读 [快速开始](getting-started.md)。

@@ -1,14 +1,10 @@
-# Model Interface
+# 模型接口
 
-Status: Public guide
+ExpManner 的模型边界很小。项目侧聚类模型可以是普通 MATLAB 对象，也可以继承可选的 `ModelBase`。
 
-ExpManner keeps the model boundary small. A clustering model can be either a
-plain MATLAB object that follows the expected methods, or a subclass of
-`ModelBase` that lets ExpManner build the `ModelStats` object for you.
+## 最小接口
 
-## Duck-Typed Contract
-
-A duck-typed model needs three public members:
+duck-typed model 需要提供三个成员：
 
 ```matlab
 mdl.name
@@ -16,22 +12,20 @@ mdl.requiredInitFields()
 mdl.train(ds, initState)
 ```
 
-`TaskManner.train` checks these members before running trials. The model does
-not need to inherit from an ExpManner class.
+`TaskManner.train` 在运行前检查这些成员。模型不需要继承 ExpManner 的基类。
 
-## Initialization Requirements
+## requiredInitFields
 
-`requiredInitFields()` tells `Initializer` what to create for each trial.
-Supported public fields are:
+`requiredInitFields()` 告诉 `Initializer` 每个 trial 需要准备哪些初始化变量。
 
-| Field | InitState member | Typical use |
+| 返回值 | InitState 字段 | 常见用途 |
 | --- | --- | --- |
-| `"labels"` | `initState.labels` | k-means style label starts |
-| `"membership"` | `initState.membership` | soft assignment starts |
-| `"factors.U"` | `initState.factors.U` | factor model basis |
-| `"factors.V"` | `initState.factors.V` | factor model coefficients |
+| `"labels"` | `initState.labels` | k-means 风格随机标签初始化 |
+| `"membership"` | `initState.membership` | 软隶属矩阵初始化 |
+| `"factors.U"` | `initState.factors.U` | 矩阵分解基矩阵 |
+| `"factors.V"` | `initState.factors.V` | 矩阵分解系数矩阵 |
 
-Return an empty string array when a model does not need random initialization:
+不需要初始化时返回空 string array：
 
 ```matlab
 function fields = requiredInitFields(~)
@@ -39,10 +33,9 @@ function fields = requiredInitFields(~)
 end
 ```
 
-## Training Output
+## train 输出
 
-A duck-typed model's `train(ds, initState)` method must return a `ModelStats`
-object.
+duck-typed model 的 `train(ds, initState)` 必须返回 `ModelStats`。
 
 ```matlab
 prediction = struct("labels", labels(:)');
@@ -55,37 +48,32 @@ stats = ModelStats( ...
     Options=struct("maxIterations", obj.maxIterations));
 ```
 
-`history` should be a table with the standard columns returned by
-`ModelStats.emptyHistory()`:
+`history` 推荐使用 `ModelStats.emptyHistory()` 的列约定：
 
-| Column | Meaning |
+| 列 | 含义 |
 | --- | --- |
-| `iter` | Iteration number |
-| `objective` | Objective value or score |
-| `delta` | Change from the previous iteration |
-| `runtime` | Elapsed runtime in seconds |
-| `extra` | Per-iteration metadata cell |
+| `iter` | 迭代编号 |
+| `objective` | 目标函数值或评分 |
+| `delta` | 相邻迭代变化量 |
+| `runtime` | 当前累计运行时间 |
+| `extra` | 每轮额外元数据 |
 
-## Prediction Fields
+## prediction 字段
 
-`ModelStats.getClusterLabels()` can derive labels from any one of these fields:
+`ModelStats.getClusterLabels()` 可以从以下字段得到聚类标签：
 
-| Prediction field | Shape expectation |
+| 字段 | 形状口径 |
 | --- | --- |
-| `labels` | `1 x numSamples` or convertible vector |
+| `labels` | 可转成 `1 x numSamples` 的标签向量 |
 | `membership` | `numClasses x numSamples` |
-| `embedding` | `numSamples x dim`, discretized by k-means |
-| `affinity` | `numSamples x numSamples`, discretized by spectral clustering |
+| `embedding` | `numSamples x dim`，再用 k-means 离散化 |
+| `affinity` | `numSamples x numSamples`，再用内置谱聚类辅助方法离散化 |
 
-For the clearest first integration, return `prediction.labels`. Use
-`prediction.membership` for NMF-like models where cluster assignment comes from
-the largest membership row.
+第一次接入模型时，优先返回 `prediction.labels`。NMF 风格模型可返回 `prediction.membership`。
 
-## Optional ModelBase
+## 可选 ModelBase
 
-New wrappers can inherit from `ModelBase` and implement only a protected
-`fit(ds, initState)` method. `ModelBase.train` measures runtime, builds
-history, normalizes membership orientation, and returns `ModelStats`.
+`ModelBase` 适合减少样板代码。子类只需要实现 protected `fit(ds, initState)`：
 
 ```matlab
 classdef MyModel < ModelBase
@@ -104,27 +92,23 @@ classdef MyModel < ModelBase
 end
 ```
 
-`fit` may return either a scalar struct or a complete `ModelStats` object. For a
-struct output, include at least one prediction field: `labels`, `membership`,
-`embedding`, `affinity`, or a nested `prediction` struct.
+`fit` 可以返回 scalar struct，也可以返回完整 `ModelStats`。struct 至少应包含 `labels`、`membership`、`embedding`、`affinity` 或 nested `prediction` 中的一种。
 
-Common struct fields recognized by `ModelBase`:
+`ModelBase` 会自动完成：
 
-| Field | Effect |
-| --- | --- |
-| `labels`, `membership`, `embedding`, `affinity` | Added to `prediction` |
-| `objective`, `delta`, `runtime`, `iter` | Used to build `history` |
-| `history` | Used directly when supplied |
-| `hp`, `options`, `extra` | Copied into `ModelStats` |
-| `objectiveMode` | Stored as `"minimize"` or another model-specific mode |
+- 计时并写入 `trainTime`。
+- 填充 `modelName`、`datasetName`、`numClasses`。
+- 根据 `objective`、`delta`、`runtime` 等字段构建 `history`。
+- 将 `membership` 规范成 `numClasses x numSamples`。
+- 将可读 public property 导出到 `options`。
 
-## Common Integration Checks
+## 接入检查清单
 
-- Keep the model object scalar.
-- Make `name` non-empty and stable because it becomes part of result paths.
-- Return `ModelStats` from duck-typed models.
-- Return labels as sample-level assignments, not class-level summaries.
-- Keep `membership` as `numClasses x numSamples`; `ModelBase` also accepts the
-  transposed form and normalizes it.
-- Avoid writing result files inside the model. Let `TaskManner.train` and
-  `Recoder` handle recording when `Record=true`.
+- `mdl` 是 scalar object。
+- `mdl.name` 非空且稳定。
+- duck-typed model 返回 `ModelStats`，不是普通 struct。
+- `labels` 是 sample-level assignment。
+- `membership` 维度能对应 `numClasses` 和 `numSamples`。
+- 模型内部不写结果文件，结果记录交给 `TaskManner.train(..., Record=true)`。
+
+完整接入示例见 [自定义模型](tutorials/custom-model.md)。

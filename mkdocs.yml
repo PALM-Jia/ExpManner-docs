@@ -1,5 +1,5 @@
 site_name: ExpManner
-site_description: Public documentation for the ExpManner MATLAB clustering experiment framework.
+site_description: ExpManner MATLAB 聚类实验框架中文文档。
 site_url: https://palm-jia.github.io/ExpManner-docs/
 repo_url: https://github.com/PALM-Jia/ExpManner-docs
 repo_name: PALM-Jia/ExpManner-docs
@@ -14,23 +14,31 @@ theme:
     - search.suggest
 
 nav:
-  - Home: index.md
-  - Getting Started: getting-started.md
-  - Installation: installation.md
-  - Concepts: concepts.md
-  - Model Interface: model-interface.md
-  - Dataset Guide: dataset-guide.md
-  - Result Management: result-management.md
-  - Tutorials:
-      - First Benchmark: tutorials/first-benchmark.md
-      - Custom Model: tutorials/custom-model.md
-      - Ensemble Clustering: tutorials/ensemble-clustering.md
-  - Examples: examples.md
-  - API Reference: api-reference.md
-  - Contributing: contributing.md
-  - Citation: citation.md
-  - Security: security.md
-  - FAQ: faq.md
+  - 入门:
+      - 首页: index.md
+      - 安装: installation.md
+      - 快速开始: getting-started.md
+  - 教程:
+      - 第一个 benchmark: tutorials/first-benchmark.md
+      - 自定义模型: tutorials/custom-model.md
+      - Ensemble clustering: tutorials/ensemble-clustering.md
+  - 操作指南:
+      - 数据集指南: dataset-guide.md
+      - 结果管理: result-management.md
+      - 示例库: examples.md
+      - 故障排查: troubleshooting.md
+  - 概念解释:
+      - 核心概念: concepts.md
+      - 模型接口: model-interface.md
+  - 参考:
+      - API 参考: api-reference.md
+      - 常见问题: faq.md
+  - 开发维护:
+      - 贡献指南: contributing.md
+      - 引用方式: citation.md
+      - 安全边界: security.md
+      - 中文写作规范: writing-style.md
+      - 版本与路线图: roadmap.md
 
 markdown_extensions:
   - admonition

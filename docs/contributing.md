@@ -1,34 +1,29 @@
-# Contributing
+# 贡献指南
 
-Status: Public guide
+ExpManner 是 PALM Jia 内部研究框架。代码仓库为 private，文档仓库为 public。
 
-ExpManner is maintained as a PALM Jia internal research framework. Code access
-requires authorization, while this documentation site is public.
+## 访问模型
 
-## Access Model
+组织 team 表达权限，不建议临时给个人散点权限。
 
-Organization teams are used instead of ad hoc repository permissions:
-
-| Team | Role |
+| team | 职责 |
 | --- | --- |
-| `maintainers` | Repository administration, releases, reviews, and policy |
-| `contributors` | Implementation branches and pull requests |
-| `members` | Internal read access and issue discussion |
-| `docs` | Documentation triage and documentation pull requests |
+| `maintainers` | 仓库管理、release、review 和策略 |
+| `contributors` | 功能分支和 PR |
+| `members` | 内部只读访问和 issue 讨论 |
+| `docs` | 文档维护和文档 PR |
 
-Ask a maintainer for the appropriate team assignment before contributing to the
-private code repository.
+需要代码访问时，联系 maintainer 加入相应 team。
 
-## Workflow
+## 工作流
 
-1. Create a focused branch from `main`.
-2. Keep each pull request about one topic.
-3. Update canonical documentation when behavior, interfaces, paths, or project
-   rules change.
-4. Run the relevant validation commands.
-5. Open a pull request with a concise summary and validation notes.
+1. 从 `main` 创建聚焦分支。
+2. 一个 PR 只解决一个主题。
+3. 行为、接口、路径或项目规则变化时，同步 canonical docs。
+4. 运行相关验证命令。
+5. PR 描述中写清变更摘要和验证结果。
 
-Suggested branch names:
+推荐分支名：
 
 ```text
 feature/custom-model-tutorial
@@ -36,10 +31,15 @@ fix/ensemble-loader-error
 docs/getting-started
 ```
 
-## Validation
+## 验证
 
-For MATLAB code changes, run the standard validation from the private code repo
-root:
+文档改动在 docs repo 中运行：
+
+```powershell
+.\scripts\check-docs.ps1
+```
+
+MATLAB 代码改动在 private code repo 中运行：
 
 ```matlab
 expRoot = "<path-to-ExpManner>";
@@ -50,52 +50,39 @@ runtests("tests")
 run("examples/smokeExpManner.m")
 ```
 
-For code changes, also run MATLAB Code Analyzer over core files, class folders,
-examples, and tests.
+代码改动还应运行 MATLAB Code Analyzer 覆盖 core、class-folder、examples 和 tests。
 
-For documentation-only changes in this public docs repo:
+## 文档同步
 
-```powershell
-.\.venv\Scripts\python -m mkdocs build --strict
-git diff --check
-```
+private code repo 中这些文件是事实来源：
 
-If you changed Pages workflow files, confirm that the GitHub Actions deploy run
-passes after pushing.
+- `README.md`
+- `AGENTS.md`
+- `doc_plan.md`
+- `CONTRIBUTING.md`
+- `SECURITY.md`
+- `CITATION.cff`
+- `docs/lrdsc-audit.md`
+- `docs/utils-inventory.md`
 
-## Documentation Synchronization
+public docs 只同步公开安全子集。发现冲突时，先修正 private canonical docs，再同步 public docs。
 
-The private code repository remains the canonical source for:
+## 中文文档要求
 
-- `README.md`: entry-point usage and current status.
-- `AGENTS.md`: durable collaboration and repository rules.
-- `doc_plan.md`: documentation milestones and release notes for this docs site.
-- `CONTRIBUTING.md`: full internal contribution policy.
-- `SECURITY.md`: full internal security handling policy.
-- `CITATION.cff`: citation metadata.
+- 后续只维护中文版本。
+- 页面标题、导航、正文和维护说明使用中文。
+- API 名称、MATLAB 代码、命令、路径占位符、仓库名和工具名保留英文。
+- 新教程按 [中文写作规范](writing-style.md) 的模板组织。
 
-This public documentation site should mirror only the public-safe subset.
+## 公开安全边界
 
-## Public Boundary
+不要发布：
 
-Do not publish:
+- 凭据、令牌、密钥或访问 key。
+- 本机私有绝对路径。
+- 私有数据集文件或具体位置。
+- 生成的 experiment artifact。
+- 内部 benchmark 表格或未发表结果比较。
+- 项目侧敏感模型实现。
 
-- Credentials, tokens, or secrets.
-- Private absolute paths.
-- Private dataset files or dataset locations.
-- Generated experiment artifacts.
-- Internal benchmark tables or unpublished result comparisons.
-- Sensitive implementation details from project-side models.
-
-Use placeholders such as `<path-to-ExpManner>` in public examples.
-
-## Pull Request Checklist
-
-Before requesting review:
-
-- The page builds locally with `mkdocs build --strict`.
-- `git diff --check` has no whitespace errors.
-- Links added in navigation are reachable.
-- Code blocks use the current `ExpManner` naming.
-- Any source links to the private code repo clearly require authorization.
-- Public docs do not expose sensitive or unpublished material.
+提交 PR 前使用 `.github/pull_request_template.md` 中的 checklist 自查。

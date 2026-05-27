@@ -1,19 +1,23 @@
-# Custom Model
+# 自定义模型
 
-Status: Public guide
+本教程展示两种接入方式：普通 duck-typed class，以及继承 `ModelBase` 的紧凑 wrapper。
 
-This tutorial shows the two recommended ways to connect a project-side
-clustering model to ExpManner:
+## 目标
 
-- A plain duck-typed class that returns `ModelStats`.
-- A compact `ModelBase` subclass that returns a small struct from `fit`.
+完成后你将能够：
 
-The examples below are intentionally small. They are meant as templates for
-private or unpublished algorithms without exposing their implementation.
+- 写出满足 ExpManner 接口的最小模型。
+- 理解 `requiredInitFields()` 的作用。
+- 决定何时返回 `ModelStats`，何时使用 `ModelBase.fit` 返回 struct。
+- 排查常见模型接口错误。
 
-## 1. Create a Duck-Typed Model
+## 前置条件
 
-Create a class on your MATLAB path, for example `MyKMeansLike.m`.
+- 已能运行 [第一个 benchmark](first-benchmark.md)。
+- 了解 MATLAB classdef 基本语法。
+- 自定义模型文件位于 MATLAB path 上。
+
+## duck-typed 模型模板
 
 ```matlab
 classdef MyKMeansLike
@@ -45,11 +49,9 @@ classdef MyKMeansLike
 end
 ```
 
-Replace `myClusteringRoutine` with your algorithm. The important part is the
-interface: `requiredInitFields()` declares the initialization, and `train`
-returns `ModelStats`.
+把 `myClusteringRoutine` 替换成你的算法主体即可。duck-typed model 的 `train` 必须返回 `ModelStats`。
 
-## 2. Test the Model in One Trial
+## 单 trial 测试
 
 ```matlab
 expRoot = "<path-to-ExpManner>";
@@ -63,13 +65,11 @@ disp(summary)
 labels = bestStats.getClusterLabels();
 ```
 
-Start with one trial while checking an integration. Increase `NumTrials` only
-after the model produces valid labels.
+先用 `NumTrials=1` 调通接口，再增加 trial 数。
 
-## 3. Use ModelBase for Less Boilerplate
+## ModelBase 模板
 
-When you inherit from `ModelBase`, implement a protected `fit` method. The
-public `train` method is inherited.
+如果模型主体可以返回一个轻量 struct，建议使用 `ModelBase` 减少样板代码：
 
 ```matlab
 classdef MyCompactModel < ModelBase
@@ -97,14 +97,11 @@ classdef MyCompactModel < ModelBase
 end
 ```
 
-`ModelBase` converts the struct into `ModelStats`, fills the model name and
-dataset name, exports readable public properties as options, and records
-training time.
+`ModelBase` 会把 `out` 转成标准 `ModelStats`。
 
-## 4. Return Membership Instead of Labels
+## 返回 membership
 
-Factorization models often produce a membership matrix. Use
-`numClasses x numSamples` orientation:
+分解模型通常返回 membership：
 
 ```matlab
 out = struct();
@@ -113,10 +110,9 @@ out.objective = objectiveTrace;
 out.delta = deltaTrace;
 ```
 
-`ModelStats.getClusterLabels()` converts membership to hard labels by taking the
-largest class membership for each sample.
+推荐维度是 `numClasses x numSamples`。`ModelBase` 也接受转置形式，并会规范成推荐维度。
 
-## 5. Run Multiple Trials and Record Results
+## 记录结果
 
 ```matlab
 resultRoot = fullfile(expRoot, "results", "my-model-check");
@@ -128,18 +124,18 @@ resultRoot = fullfile(expRoot, "results", "my-model-check");
     ExperimentName="myModelCheck");
 ```
 
-Result files are local artifacts. Keep them out of Git, especially when they
-contain unpublished model behavior or private data names.
+生成的结果只用于本地复现，不提交到 Git。
 
-## Troubleshooting
+## 常见错误
 
-| Symptom | Likely cause |
-| --- | --- |
-| `missingModelName` | `mdl.name` is empty or unavailable |
-| `invalidModelInterface` | `requiredInitFields` or `train` is missing |
-| `invalidStats` | A duck-typed model returned a struct instead of `ModelStats` |
-| `missingPrediction` | `ModelBase.fit` did not return labels, membership, embedding, affinity, or prediction |
-| Unexpected metric errors | `bestStats.getClusterLabels()` cannot derive sample labels |
+| 现象 | 原因 | 处理 |
+| --- | --- | --- |
+| `missingModelName` | `name` 为空或不可访问 | 增加稳定的 public `name` property |
+| `invalidModelInterface` | 缺少 `requiredInitFields` 或 `train` | 补齐最小接口 |
+| `invalidStats` | duck-typed model 返回了 struct | 返回 `ModelStats` 或改用 `ModelBase` |
+| `missingPrediction` | `fit` 输出没有 labels/membership/embedding/affinity | 补一个 prediction 字段 |
+| 指标计算失败 | `getClusterLabels()` 无法得到标签 | 检查 prediction 形状 |
 
-For a working reference, inspect the demo models in the private code repository
-after you have PALM Jia access.
+## 下一步
+
+阅读 [模型接口](../model-interface.md) 查看完整契约，或参考 private code repo 中的 demo models。

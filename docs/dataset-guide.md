@@ -1,135 +1,104 @@
-# Dataset Guide
+# 数据集指南
 
-Status: Public guide
+`Dataset` 是 ExpManner 的数据入口，负责数据加载、标签、预处理、可选约束、可选图和 ensemble 元数据。
 
-`Dataset` is the public entry point for data loading and per-dataset metadata.
-ExpManner currently uses ordinary MATLAB folder style. After adding the project
-root to the MATLAB path, construct datasets directly with `Dataset(...)`.
+## feature dataset
+
+默认 `Kind="feature"`：
 
 ```matlab
-addpath("<path-to-ExpManner>");
 ds = Dataset("Iris", Normalize="range");
 ```
 
-Do not use package-qualified dataset calls. ExpManner is loaded as an ordinary
-MATLAB folder on the path.
+核心成员：
 
-## Feature Datasets
-
-Feature datasets use `Kind="feature"` by default.
-
-```matlab
-ds = Dataset("Iris", Kind="feature", Normalize="range");
-```
-
-The loaded data follows these conventions:
-
-| Member | Meaning |
+| 成员 | 含义 |
 | --- | --- |
-| `ds.X` | Feature matrix, usually `[features, samples]` |
-| `ds.gnd` | Ground-truth labels as a `1 x n` row vector |
-| `ds.numSamples` | Number of samples |
-| `ds.dataLength` | Number of features after vectorization |
-| `ds.numClasses` | Number of unique labels |
+| `ds.X` | 特征矩阵，通常为 `[features, samples]` |
+| `ds.gnd` | `1 x n` 标签行向量 |
+| `ds.numSamples` | 样本数 |
+| `ds.dataLength` | vectorize 后的特征数 |
+| `ds.numClasses` | 标签类别数 |
 
-Image-like datasets may be loaded as tensors and then vectorized. The default
-is `Vectorize=true`.
+图像类数据可以由 loader 读取成 tensor，再按默认 `Vectorize=true` 展开为特征矩阵。
 
-## Dataset Registry
-
-Inspect available built-in feature names with:
+## 名称查询
 
 ```matlab
 Dataset.names()
 Dataset.registry()
-```
-
-`Dataset.registry()` returns a table with public metadata such as dataset name,
-file name, variable names, label interpretation, orientation, and description.
-
-To diagnose a typo:
-
-```matlab
 Dataset.suggestName("iriss")
 ```
 
-## Multiple Datasets
+用途：
 
-`Dataset` accepts a string array and returns an object array.
+- `Dataset.names()` 查看可用名称。
+- `Dataset.registry()` 查看 feature dataset registry。
+- `Dataset.suggestName()` 处理拼写不确定的问题。
+
+## 多数据集
+
+`Dataset` 接受 string array，并返回 object array：
 
 ```matlab
 datasets = Dataset(["Iris", "Wine"], Normalize="range");
 mdl = DemoModels.KMeans();
-
 [bestStats, summary] = TaskManner.train(datasets, mdl, NumTrials=3);
 ```
 
-This is useful for small benchmark sweeps. Keep public examples limited to
-datasets that readers can access.
+这是小型 benchmark sweep 的推荐写法。
 
-## Preprocessing Options
+## 常用选项
 
-Common public options:
-
-| Option | Values |
+| 选项 | 可选值或含义 |
 | --- | --- |
-| `Normalize` | `"null"`, `"range"`, `"L1"`, `"L2"` |
-| `Vectorize` | `true`, `false` |
-| `BuildGraph` | `true`, `false` |
-| `GraphOptions` | Struct passed to graph construction |
-| `PosLabelRatio` | Ratio for class-indicator constraints |
-| `NegLabelRatio` | Ratio for pairwise cannot-link constraints |
-| `ConstraintSeed` | Seed for constraint sampling |
+| `Normalize` | `"null"`、`"range"`、`"L1"`、`"L2"` |
+| `Vectorize` | 是否把样本展开为列向量 |
+| `BuildGraph` | 是否构建 affinity graph |
+| `GraphOptions` | 图构造参数 struct |
+| `PosLabelRatio` | class-indicator 约束比例 |
+| `NegLabelRatio` | pairwise cannot-link 约束比例 |
+| `ConstraintSeed` | 约束采样 seed |
 
-`Noise` and `Mask` are reserved for a later version.
+`Noise` 和 `Mask` 当前保留给后续版本。
 
-## Ensemble Datasets
+## ensemble dataset
 
-Ensemble datasets use `Kind="ensemble"`.
+ensemble clustering 数据使用 `Kind="ensemble"`：
 
 ```matlab
-ensembleNames = Dataset.names(Kind="ensemble");
-ds = Dataset(ensembleNames(1), Kind="ensemble");
+names = Dataset.names(Kind="ensemble");
+ds = Dataset(names(1), Kind="ensemble");
 ```
 
-An ensemble dataset stores base clustering outputs in `ds.ensemble` and exposes
-a feature representation in `ds.X`. The current feature mode is concatenated
-membership.
+重要字段：
 
-Important ensemble fields:
-
-| Field | Meaning |
+| 字段 | 含义 |
 | --- | --- |
-| `ds.ensemble.enabled` | Whether this is an ensemble dataset |
-| `ds.ensemble.members` | Base clustering labels |
-| `ds.ensemble.baseMemberships` | One membership matrix per base clustering |
-| `ds.ensemble.baseClusterCounts` | Cluster count of each base clustering |
-| `ds.ensemble.numBaseClusterings` | Number of base clusterings |
-| `ds.ensemble.featureMode` | Feature construction mode |
+| `ds.ensemble.enabled` | 是否为 ensemble dataset |
+| `ds.ensemble.members` | base clustering labels |
+| `ds.ensemble.baseMemberships` | 每个 base clustering 的 membership matrix |
+| `ds.ensemble.baseClusterCounts` | 每个 base clustering 的 cluster count |
+| `ds.ensemble.numBaseClusterings` | base clustering 数量 |
+| `ds.ensemble.featureMode` | 当前 feature 表示方式 |
 
-The ensemble registry scans `.mat` files under the configured data root and only
-registers files with the expected public variables.
+当前 feature mode 是 `concatenatedMembership`，即把 base clustering labels 转成 membership features 后拼接为 `ds.X`。
 
-## Data Root
+## 数据根目录
 
-By default, ExpManner looks for a sibling `datasets` folder next to the project
-root. You can override it without changing global MATLAB state:
+默认数据根目录由 ExpManner 约定推断，也可以显式传入：
 
 ```matlab
 ds = Dataset("Iris", DataRoot="<path-to-datasets>", Normalize="range");
 ```
 
-For public tutorials, avoid hard-coding local absolute paths. Use placeholders
-or environment-specific setup instructions.
+public docs 中不要写真实私有路径。需要说明私有数据时，只写变量约定和 shape。
 
-## Metadata Snapshot
-
-Use `getInfo()` when you need a lightweight summary:
+## 轻量信息快照
 
 ```matlab
 info = ds.getInfo();
 disp(info)
 ```
 
-This returns core size information, preprocessing choices, constraint counts,
-graph status, and ensemble metadata when relevant.
+`getInfo()` 返回样本数、特征数、类别数、预处理选项、约束数量、图状态和 ensemble metadata。它适合在实验日志或调试输出中使用。

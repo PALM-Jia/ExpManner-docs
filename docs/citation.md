@@ -1,29 +1,22 @@
-# Citation
+# 引用方式
 
-Status: Public guide
+如果 ExpManner 支撑论文、报告、学位论文或发布实验，请引用项目并致谢相关贡献者。
 
-If ExpManner supports a publication, thesis, report, or released experiment,
-cite the project and acknowledge the relevant contributors.
+canonical citation metadata 位于 private code repo 的 `CITATION.cff`。
 
-The canonical citation metadata lives in the private code repository's
-`CITATION.cff`.
+## 当前元数据
 
-## Current Metadata
-
-| Field | Value |
+| 字段 | 值 |
 | --- | --- |
-| Title | `ExpManner` |
-| Type | Software |
-| Version | `0.2` |
-| Release date | `2026-05-26` |
-| Author | Wanlong Li |
-| Repository | `https://github.com/PALM-Jia/ExpManner` |
-| License | `LicenseRef-PALM-Jia-Internal-Research` |
+| title | `ExpManner` |
+| type | `software` |
+| version | `0.2` |
+| date-released | `2026-05-26` |
+| author | `Wanlong Li` |
+| repository-code | `https://github.com/PALM-Jia/ExpManner` |
+| license | `LicenseRef-PALM-Jia-Internal-Research` |
 
-## CFF
-
-Use the repository's `CITATION.cff` when your tool supports Citation File Format.
-The public-safe summary is:
+## CFF 摘要
 
 ```yaml
 cff-version: 1.2.0
@@ -38,9 +31,9 @@ date-released: "2026-05-26"
 version: "0.2"
 ```
 
-## BibTeX Draft
+## BibTeX draft
 
-Use this as a draft when BibTeX is required and no DOI has been assigned:
+在没有 DOI 的阶段，可以先使用：
 
 ```bibtex
 @software{li2026expmanner,
@@ -52,5 +45,4 @@ Use this as a draft when BibTeX is required and no DOI has been assigned:
 }
 ```
 
-If a paper, dataset, or released package later introduces a DOI, update both
-`CITATION.cff` and this page.
+如果后续论文、数据集或 release package 有 DOI，应同步更新 `CITATION.cff` 和本页。

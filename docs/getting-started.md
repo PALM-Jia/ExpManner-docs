@@ -1,69 +1,68 @@
-# Getting Started
+# 快速开始
 
-Status: Minimum usable
+本页目标是在 10 分钟内跑通第一次 ExpManner 实验。
 
-This page guides a new user through the first successful ExpManner run.
+## 目标
 
-## Prerequisites
+完成后你将能够：
 
-- MATLAB installed locally.
-- Access to the private `PALM-Jia/ExpManner` code repository.
-- A local checkout of the repository.
-- The repository root added to the MATLAB path for the current session.
+- 在当前 MATLAB 会话中加入 ExpManner。
+- 加载 `Iris` 数据集。
+- 使用 `DemoModels.KMeans` 跑 3 次 trial。
+- 识别成功输出和常见路径错误。
 
-Replace `<path-to-ExpManner>` with your local checkout path.
+## 前置条件
 
-## Add ExpManner to the MATLAB Path
+- 已完成 [安装](installation.md)。
+- 已获得 private code repo 访问权限。
+- 已知道本机 `<path-to-ExpManner>`。
+
+## 完整代码
 
 ```matlab
 expRoot = "<path-to-ExpManner>";
 addpath(expRoot);
 addpath(fullfile(expRoot, "examples"));
-```
 
-ExpManner does not use a `+ExpManner` package namespace. After adding the root
-folder to the path, use the short class names directly.
-
-## Load the First Dataset
-
-```matlab
 ds = Dataset("Iris", Normalize="range");
-disp(ds)
-```
-
-`Dataset("Iris")` loads a small public feature dataset. ExpManner stores data as
-`[features, samples]` and labels as a `1 x n` positive-integer row vector.
-
-## Run a Minimal Benchmark
-
-```matlab
 mdl = DemoModels.KMeans();
 [bestStats, summary] = TaskManner.train(ds, mdl, NumTrials=3);
+
 disp(summary)
+labels = bestStats.getClusterLabels();
 ```
 
-`TaskManner.train` runs multiple initialization trials, evaluates clustering
-metrics, and returns the best trial according to the default `ACC` metric.
+## 预期输出
 
-## Run the Smoke Workflow
+成功时应看到：
 
-The smoke script runs several demo models and writes results under the local
-`results/` folder:
+- `summary` 是一行 table。
+- table 中包含 `Dataset`、`Model`、`BestTrial`、`ACC`、`NMI`、`PUR`、`ARI` 等列。
+- `labels` 是长度等于样本数的聚类标签。
+
+## 运行 smoke workflow
+
+smoke 脚本会运行多个 demo model，并写入本地 `results/`：
 
 ```matlab
 run(fullfile(expRoot, "examples", "smokeExpManner.m"));
 ```
 
-Generated results are local artifacts. Do not commit `results/` to Git.
+成功结束时会显示：
 
-## Expected Outcome
+```text
+Smoke run completed.
+```
 
-A successful first run should:
+生成的 `results/` 是本地实验 artifact，不要提交到 Git。
 
-- construct a `Dataset` object for `Iris`;
-- run `DemoModels.KMeans`;
-- display a summary table with metrics such as `ACC`, `NMI`, `PUR`, and `ARI`;
-- complete the smoke workflow with `Smoke run completed.`
+## 常见错误
 
-If MATLAB cannot find `Dataset` or `DemoModels.KMeans`, check that both
-`expRoot` and `fullfile(expRoot, "examples")` were added to the path.
+| 现象 | 常见原因 | 处理 |
+| --- | --- | --- |
+| MATLAB 找不到 `Dataset` | 没有加入 ExpManner 根目录 | 重新运行 `addpath(expRoot)` |
+| MATLAB 找不到 `DemoModels.KMeans` | 没有加入 `examples` | 重新运行 `addpath(fullfile(expRoot, "examples"))` |
+| 数据集文件找不到 | 本机数据根目录未准备好 | 先用 `Iris` 做健康检查，再检查私有数据安装 |
+| 结果目录出现很多文件 | smoke workflow 启用了记录 | 保留本地使用，不提交 `results/` |
+
+下一步可以阅读 [第一个 benchmark](tutorials/first-benchmark.md)，了解如何记录和读取 experiment summary。
