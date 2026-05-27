@@ -12,12 +12,12 @@ run("examples/docs/runAllDocExamples.m")
 
 运行成功时会输出 `DOC_ALL_EXAMPLES_OK`。这些脚本可能在本地生成 `results/`，生成物不提交。
 
-| 任务 | companion script | 成功 marker |
-| --- | --- | --- |
-| 最小 benchmark | `examples/docs/firstBenchmarkDoc.m` | `DOC_FIRST_BENCHMARK_OK` |
-| 结果记录与读取 | `examples/docs/resultManagementDoc.m` | `DOC_RESULT_MANAGEMENT_OK` |
-| 多数据集与多模型 | `examples/docs/multiBenchmarkDoc.m` | `DOC_MULTI_BENCHMARK_OK` |
-| ensemble workflow | `examples/docs/ensembleWorkflowDoc.m` | `DOC_ENSEMBLE_WORKFLOW_OK` 或 `DOC_ENSEMBLE_WORKFLOW_SKIPPED` |
+| 任务 | companion script | 成功 marker | 实测公开输出 |
+| --- | --- | --- | --- |
+| 最小 benchmark | `examples/docs/firstBenchmarkDoc.m` | `DOC_FIRST_BENCHMARK_OK` | `Iris` + `DemoKMeans`，`ACC=0.96`，`NMI=0.86227` |
+| 结果记录与读取 | `examples/docs/resultManagementDoc.m` | `DOC_RESULT_MANAGEMENT_OK` | 读取 `docsV04ResultManagement` summary，并列出规范化 result tree |
+| 多数据集与多模型 | `examples/docs/multiBenchmarkDoc.m` | `DOC_MULTI_BENCHMARK_OK` | `Iris/Wine` 多数据集；`DemoKMeans/DemoSimpleNMF` 多模型 |
+| ensemble workflow | `examples/docs/ensembleWorkflowDoc.m` | `DOC_ENSEMBLE_WORKFLOW_OK` 或 `DOC_ENSEMBLE_WORKFLOW_SKIPPED` | 有本机 ensemble 数据时只展示 shape 和精简指标；无数据时跳过 |
 
 ## Live Script 辅助材料
 
@@ -62,6 +62,12 @@ disp(summary)
 
 预期输出：一行 summary table，并能通过 `bestStats.getClusterLabels()` 取得聚类标签。
 
+实测精简输出：
+
+| dataset | model | numTrials | bestBy | bestTrial | bestValue | ACC | NMI | PUR | ARI |
+| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Iris | DemoKMeans | 3 | ACC | 1 | 0.96 | 0.96 | 0.86227 | 0.96 | 0.88567 |
+
 ## 多数据集 benchmark
 
 用途：一次运行多个小型 feature dataset。
@@ -80,6 +86,13 @@ disp(summary)
 
 预期输出：`summary` 中每个 dataset-model pair 一行。
 
+实测精简输出：
+
+| dataset | model | numTrials | bestBy | bestTrial | bestValue | ACC | NMI | PUR | ARI |
+| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Iris | DemoKMeans | 2 | ACC | 1 | 0.96 | 0.96 | 0.86227 | 0.96 | 0.88567 |
+| Wine | DemoKMeans | 2 | ACC | 1 | 0.69663 | 0.69663 | 0.37416 | 0.69663 | 0.34162 |
+
 ## 多模型 benchmark
 
 用途：比较多个满足接口的模型。
@@ -97,6 +110,13 @@ disp(summary)
 ```
 
 预期输出：`summary` 中每个 model 一行。`bestStats` 在多模型时返回 cell。
+
+实测精简输出：
+
+| dataset | model | numTrials | bestBy | bestTrial | bestValue | ACC | NMI | PUR | ARI |
+| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Iris | DemoKMeans | 2 | ACC | 1 | 0.96 | 0.96 | 0.86227 | 0.96 | 0.88567 |
+| Iris | DemoSimpleNMF | 2 | ACC | 1 | 0.71333 | 0.69 | 0.52311 | 0.69 | 0.45511 |
 
 ## 记录并读取 experiment summary
 
@@ -121,6 +141,18 @@ disp(T)
 
 预期输出：`results/docs-examples/experiments/docsDemo/summary.csv` 可被读取。
 
+实测 result tree 摘要：
+
+```text
+experiments/docsV04ResultManagement/index.csv
+experiments/docsV04ResultManagement/summary.csv
+index.csv
+train/DemoKMeans/Iris/<runId>/bestStats.mat
+train/DemoKMeans/Iris/<runId>/manifest.json
+train/DemoKMeans/Iris/<runId>/runSummary.csv
+train/DemoKMeans/Iris/<runId>/trialMetrics.csv
+```
+
 ## ensemble dataset workflow
 
 用途：说明 ensemble dataset 的公开安全调用方式。
@@ -140,6 +172,12 @@ end
 ```
 
 说明：公开文档只展示 shape 和调用方式，不展示私有数据路径或内部 benchmark。
+
+实测公开安全 shape 摘要：
+
+| kind | numSamples | dataLength | numClasses | numBaseClusterings | ensembleFeatureMode |
+| --- | ---: | ---: | ---: | ---: | --- |
+| ensemble | 2139 | 2400 | 2 | 100 | concatenatedMembership |
 
 ## 仓库内示例文件
 

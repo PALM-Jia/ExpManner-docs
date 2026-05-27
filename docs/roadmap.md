@@ -10,7 +10,7 @@
 | 文档仓库 | `PALM-Jia/ExpManner-docs`，public |
 | 文档语言 | 只维护中文 |
 | 当前代码状态 | v0.2 runnable skeleton |
-| 当前文档状态 | v0.3 已完成，v0.4 M10-M11 已完成 |
+| 当前文档状态 | v0.3 已完成，v0.4 M10-M12 已完成 |
 
 ## 稳定接口
 
@@ -46,11 +46,11 @@ v0.4 的目标是让核心教程不只是“可读”，而是可运行、可复
 - 已使用 MATLAB MCP 运行统一入口，成功输出 `DOC_ALL_EXAMPLES_OK`。
 - M11 Live Script 辅助材料已完成：private code repo 已新增 `examples/live/*.mlx`、`examples/live/sources/*.m` 和 `generateLiveScripts.m`。
 - 已用独立 MATLAB batch 进程生成并执行保存 Live Script，成功输出 `DOC_M11_BATCH_LIVE_EXECUTION_OK`。
-- public docs 已记录 companion script、Live Script 和成功 marker；后续 M12-M13 将继续补充真实输出摘录和维护闭环。
+- M12 公开安全输出嵌入已完成：public docs 已补充 summary 表格、规范化 result tree、ensemble shape 摘要和两个实测错误摘录。
+- public docs 已记录 companion script、Live Script 和成功 marker；后续 M13 将收口维护闭环。
 
 计划内容：
 
-- 使用 MATLAB MCP 或本机 MATLAB 实际运行核心示例，把公开安全的 summary、目录结构和关键输出贴回 public docs。
 - 在 public docs 中标注每个示例对应的 companion script、Live Script 和验证 marker。
 - 不做组内 onboarding 练习题；v0.4 聚焦可运行案例材料，不设计练习作业。
 

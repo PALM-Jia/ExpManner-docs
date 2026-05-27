@@ -60,6 +60,32 @@ T = Loader.loadExperimentSummary(resultRoot, ExperimentName="firstBenchmark");
 disp(T)
 ```
 
+## 实测读取输出
+
+以下结果来自维护者在 MATLAB 中运行 `examples/docs/resultManagementDoc.m`，只展示公开安全列。
+
+| dataset | model | numTrials | bestBy | bestTrial | bestValue | ACC | NMI | PUR | ARI |
+| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Iris | DemoKMeans | 3 | ACC | 1 | 0.96 | 0.96 | 0.86227 | 0.96 | 0.88567 |
+
+该脚本生成并读取的结果文件形状如下，真实 run id 已规范化为 `<runId>`：
+
+```text
+experiments/docsV04ResultManagement/index.csv
+experiments/docsV04ResultManagement/summary.csv
+index.csv
+train/DemoKMeans/Iris/<runId>/bestStats.mat
+train/DemoKMeans/Iris/<runId>/manifest.json
+train/DemoKMeans/Iris/<runId>/runSummary.csv
+train/DemoKMeans/Iris/<runId>/trialMetrics.csv
+```
+
+成功 marker：
+
+```text
+DOC_RESULT_MANAGEMENT_OK
+```
+
 按条件过滤：
 
 ```matlab

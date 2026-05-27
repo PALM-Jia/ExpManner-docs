@@ -21,6 +21,12 @@ addpath(expRoot);
 
 现象：`DemoModels.KMeans()` 无法解析。
 
+实测错误摘录：
+
+```text
+无法解析名称 'DemoModels.KMeans'。
+```
+
 原因：demo model 在 `examples` 目录下，只有根目录不够。
 
 解决：
@@ -53,6 +59,14 @@ Dataset.suggestName("datasetName")
 ## unknown dataset
 
 现象：数据集名称无法匹配。
+
+实测错误摘录：
+
+```text
+ExpManner:Dataset:unknownDataset
+Unknown feature dataset "Iriss". Did you mean: Iris, Digits, Wine, SEEDS, Yeast?
+Use Dataset.names(Kind="feature") to inspect available names.
+```
 
 原因：名称拼写错误或 `Kind` 不对。
 

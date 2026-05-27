@@ -46,6 +46,20 @@ disp(T)
 - `T` 能读取刚写入的 experiment summary。
 - `bestStats.getClusterLabels()` 能返回 `Iris` 样本的聚类标签。
 
+## 实测输出摘录
+
+以下结果来自维护者在 MATLAB 中运行 `examples/docs/firstBenchmarkDoc.m`，只保留适合公开展示的精简列。
+
+| dataset | model | numTrials | bestBy | bestTrial | bestValue | ACC | NMI | PUR | ARI |
+| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Iris | DemoKMeans | 3 | ACC | 1 | 0.96 | 0.96 | 0.86227 | 0.96 | 0.88567 |
+
+成功 marker：
+
+```text
+DOC_FIRST_BENCHMARK_OK
+```
+
 ## 生成文件
 
 ```text
