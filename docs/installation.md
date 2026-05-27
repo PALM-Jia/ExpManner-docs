@@ -54,7 +54,7 @@ addpath(expRoot);
 addpath(fullfile(expRoot, "examples"));
 
 ds = Dataset("Iris", Normalize="range");
-mdl = DemoModels.KMeans();
+mdl = Models.KMeans();
 [~, summary] = TaskManner.train(ds, mdl, NumTrials=1);
 disp(summary)
 ```

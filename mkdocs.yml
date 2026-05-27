@@ -20,8 +20,10 @@ nav:
       - 快速开始: getting-started.md
   - 教程:
       - 第一个 benchmark: tutorials/first-benchmark.md
+      - 矩阵分解聚类: tutorials/factorization-clustering.md
+      - 基于图的聚类: tutorials/graph-clustering.md
       - 自定义模型: tutorials/custom-model.md
-      - Ensemble clustering: tutorials/ensemble-clustering.md
+      - 集成聚类: tutorials/ensemble-clustering.md
   - 操作指南:
       - 数据集指南: dataset-guide.md
       - 结果管理: result-management.md

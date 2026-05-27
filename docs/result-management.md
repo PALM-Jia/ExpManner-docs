@@ -32,7 +32,7 @@ resultRoot = fullfile(expRoot, "results", "docs-first-benchmark");
 ```text
 results/docs-first-benchmark/
   index.csv
-  train/DemoKMeans/Iris/<runId>/
+  train/KMeans/Iris/<runId>/
     manifest.json
     bestStats.mat
     runSummary.csv
@@ -66,7 +66,7 @@ disp(T)
 
 | dataset | model | numTrials | bestBy | bestTrial | bestValue | ACC | NMI | PUR | ARI |
 | --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Iris | DemoKMeans | 3 | ACC | 1 | 0.96 | 0.96 | 0.86227 | 0.96 | 0.88567 |
+| Iris | KMeans | 3 | ACC | 1 | 0.96 | 0.96 | 0.86227 | 0.96 | 0.88567 |
 
 该脚本生成并读取的结果文件形状如下，真实 run id 已规范化为 `<runId>`：
 
@@ -74,10 +74,10 @@ disp(T)
 experiments/docsV04ResultManagement/index.csv
 experiments/docsV04ResultManagement/summary.csv
 index.csv
-train/DemoKMeans/Iris/<runId>/bestStats.mat
-train/DemoKMeans/Iris/<runId>/manifest.json
-train/DemoKMeans/Iris/<runId>/runSummary.csv
-train/DemoKMeans/Iris/<runId>/trialMetrics.csv
+train/KMeans/Iris/<runId>/bestStats.mat
+train/KMeans/Iris/<runId>/manifest.json
+train/KMeans/Iris/<runId>/runSummary.csv
+train/KMeans/Iris/<runId>/trialMetrics.csv
 ```
 
 成功 marker：
@@ -89,7 +89,7 @@ DOC_RESULT_MANAGEMENT_OK
 按条件过滤：
 
 ```matlab
-idx = Loader.filterIndex(resultRoot, Dataset="Iris", Model="DemoKMeans");
+idx = Loader.filterIndex(resultRoot, Dataset="Iris", Model="KMeans");
 summary = Loader.filterSummary(resultRoot, ExperimentName="firstBenchmark");
 ```
 

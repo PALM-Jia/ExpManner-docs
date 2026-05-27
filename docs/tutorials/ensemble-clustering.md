@@ -1,6 +1,6 @@
-# Ensemble clustering
+# 集成聚类
 
-本教程说明 `Kind="ensemble"` 的数据形态和公开安全 workflow。
+本教程说明 `Kind="ensemble"` 的数据形态和公开安全调用方式。
 
 ## 目标
 
@@ -15,7 +15,7 @@
 
 - 已完成 [安装](../installation.md)。
 - 本机数据根目录已经准备好 ensemble `.mat` 文件。
-- 公开文档不展示私有数据路径或内部 benchmark。
+- 公开说明不展示私有数据路径或内部 benchmark。
 
 ## 完整代码
 
@@ -32,8 +32,8 @@ if ~isempty(names)
     info = ds.getInfo();
     disp(info)
 
-    mdl = DemoModels.KMeans();
-    [bestStats, summary] = TaskManner.train(ds, mdl, NumTrials=3);
+    mdl = Models.KMeans();
+    [bestStats, summary] = TaskManner.train(ds, mdl, NumTrials=2, Seed=1);
     disp(summary)
 end
 ```
@@ -46,6 +46,18 @@ end
 - `summary` 显示 dataset-model 的聚类指标。
 
 如果 `names` 为空，说明当前环境没有安装 ensemble 数据。这不是框架错误。
+
+## 实测公开安全摘录
+
+| kind | numSamples | dataLength | numClasses | numBaseClusterings | ensembleFeatureMode |
+| --- | ---: | ---: | ---: | ---: | --- |
+| ensemble | 2139 | 2400 | 2 | 100 | concatenatedMembership |
+
+成功 marker：
+
+```text
+DOC_ENSEMBLE_WORKFLOW_OK
+```
 
 ## members 与 X
 
@@ -73,9 +85,9 @@ ds.ensemble.featureMode
 ```matlab
 keep = names(1:min(3, numel(names)));
 datasets = Dataset(keep, Kind="ensemble");
-mdl = DemoModels.KMeans();
+mdl = Models.KMeans();
 
-[bestStats, summary] = TaskManner.train(datasets, mdl, NumTrials=3);
+[bestStats, summary] = TaskManner.train(datasets, mdl, NumTrials=2, Seed=1);
 disp(summary)
 ```
 

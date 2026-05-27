@@ -17,17 +17,17 @@ addpath(expRoot);
 
 相关页面：[安装](installation.md)、[快速开始](getting-started.md)。
 
-## MATLAB 找不到 DemoModels.KMeans
+## MATLAB 找不到 Models.KMeans
 
-现象：`DemoModels.KMeans()` 无法解析。
+现象：`Models.KMeans()` 无法解析。
 
 实测错误摘录：
 
 ```text
-无法解析名称 'DemoModels.KMeans'。
+无法解析名称 'Models.KMeans'。
 ```
 
-原因：demo model 在 `examples` 目录下，只有根目录不够。
+原因：公开示例模型在 `examples` 目录下，只有根目录不够。
 
 解决：
 
@@ -133,6 +133,21 @@ size(V)  % 应能解释为 numClasses x numSamples
 ```
 
 `ModelBase` 接受 `numClasses x numSamples` 或 `numSamples x numClasses`，并会规范成前者。
+
+## affinity 为空
+
+现象：基于图的模型或调试代码中发现 `ds.graph.S` 为空。
+
+原因：构造数据集时没有启用 `BuildGraph=true`，或者模型选择了内部临时构图。
+
+解决：
+
+```matlab
+ds = Dataset("Iris", Normalize="range", BuildGraph=true, ...
+    GraphOptions=struct("WeightMode", "HeatKernel", "k", 5));
+```
+
+相关页面：[基于图的聚类](tutorials/graph-clustering.md)。
 
 ## 找不到 experiment summary
 

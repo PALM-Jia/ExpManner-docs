@@ -8,7 +8,7 @@
 
 - 在当前 MATLAB 会话中加入 ExpManner。
 - 加载 `Iris` 数据集。
-- 使用 `DemoModels.KMeans` 跑 3 次 trial。
+- 使用 `Models.KMeans` 跑 3 次 trial。
 - 识别成功输出和常见路径错误。
 
 ## 前置条件
@@ -25,7 +25,7 @@ addpath(expRoot);
 addpath(fullfile(expRoot, "examples"));
 
 ds = Dataset("Iris", Normalize="range");
-mdl = DemoModels.KMeans();
+mdl = Models.KMeans();
 [bestStats, summary] = TaskManner.train(ds, mdl, NumTrials=3);
 
 disp(summary)
@@ -61,7 +61,7 @@ Smoke run completed.
 | 现象 | 常见原因 | 处理 |
 | --- | --- | --- |
 | MATLAB 找不到 `Dataset` | 没有加入 ExpManner 根目录 | 重新运行 `addpath(expRoot)` |
-| MATLAB 找不到 `DemoModels.KMeans` | 没有加入 `examples` | 重新运行 `addpath(fullfile(expRoot, "examples"))` |
+| MATLAB 找不到 `Models.KMeans` | 没有加入 `examples` | 重新运行 `addpath(fullfile(expRoot, "examples"))` |
 | 数据集文件找不到 | 本机数据根目录未准备好 | 先用 `Iris` 做健康检查，再检查私有数据安装 |
 | 结果目录出现很多文件 | smoke workflow 启用了记录 | 保留本地使用，不提交 `results/` |
 

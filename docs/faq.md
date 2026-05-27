@@ -29,7 +29,7 @@ mdl.train(ds, initState)
 
 ## 项目侧模型应该放在哪里？
 
-项目侧模型不要放进框架核心目录。private code repo 中的 `examples/+DemoModels` 和 `examples/+LRDSCAdapters` 只是示例；真实研究模型应放在自己的 project package 或 project repo 中。
+项目侧模型不要放进框架核心目录。private code repo 中的 `examples/+Models` 是公开安全示例模型库；真实研究模型应放在自己的 project package 或 project repo 中。
 
 ## 为什么 Metricer 和 utils 使用 class-folder？
 

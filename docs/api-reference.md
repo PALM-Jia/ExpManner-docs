@@ -131,7 +131,7 @@ source link：[ModelBase.m](https://github.com/PALM-Jia/ExpManner/blob/main/Mode
 
 ```matlab
 T = Loader.loadExperimentSummary(resultRoot, ExperimentName="demo");
-idx = Loader.filterIndex(resultRoot, Dataset="Iris", Model="DemoKMeans");
+idx = Loader.filterIndex(resultRoot, Dataset="Iris", Model="KMeans");
 ```
 
 source links：
@@ -157,3 +157,17 @@ source links：
 
 - [@Metricer](https://github.com/PALM-Jia/ExpManner/tree/main/%40Metricer)
 - [@utils](https://github.com/PALM-Jia/ExpManner/tree/main/%40utils)
+
+## 公开示例模型
+
+`examples/+Models` 不是核心框架，但它提供公开安全、可运行、可教学的模型实现：
+
+| 模型 | 主要用途 | 输出 |
+| --- | --- | --- |
+| `Models.KMeans` | 最小 duck-typed model | `labels` |
+| `Models.KKM` | kernel k-means | `labels` |
+| `Models.NMF` | nonnegative matrix factorization | `membership` |
+| `Models.SymNMF` | symmetric NMF graph clustering | `membership` |
+| `Models.LoRD` | scaled symmetric NMF graph clustering | `membership` |
+
+这些模型用于教程、smoke 和文档验证。正式研究模型仍建议放在各自 project repo 或 project package 中。

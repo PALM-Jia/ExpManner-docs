@@ -42,7 +42,7 @@ Dataset.suggestName("iriss")
 
 ```matlab
 datasets = Dataset(["Iris", "Wine"], Normalize="range");
-mdl = DemoModels.KMeans();
+mdl = Models.KMeans();
 [bestStats, summary] = TaskManner.train(datasets, mdl, NumTrials=3);
 ```
 

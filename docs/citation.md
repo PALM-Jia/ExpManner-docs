@@ -12,7 +12,7 @@ canonical citation metadata 位于 private code repo 的 `CITATION.cff`。
 | type | `software` |
 | version | `0.2` |
 | date-released | `2026-05-26` |
-| author | `Wanlong Li` |
+| author | `Wenlong Lyu` |
 | repository-code | `https://github.com/PALM-Jia/ExpManner` |
 | license | `LicenseRef-PALM-Jia-Internal-Research` |
 
@@ -23,8 +23,8 @@ cff-version: 1.2.0
 title: "ExpManner"
 type: software
 authors:
-  - family-names: "Li"
-    given-names: "Wanlong"
+  - family-names: "Lyu"
+    given-names: "Wenlong"
 repository-code: "https://github.com/PALM-Jia/ExpManner"
 license: "LicenseRef-PALM-Jia-Internal-Research"
 date-released: "2026-05-26"
@@ -36,8 +36,8 @@ version: "0.2"
 在没有 DOI 的阶段，可以先使用：
 
 ```bibtex
-@software{li2026expmanner,
-  author = {Li, Wanlong},
+@software{lyu2026expmanner,
+  author = {Lyu, Wenlong},
   title = {ExpManner},
   year = {2026},
   version = {0.2},

@@ -1,6 +1,6 @@
 # 自定义模型
 
-本教程展示两种接入方式：普通 duck-typed class，以及继承 `ModelBase` 的紧凑 wrapper。
+本教程展示两种接入方式：普通 duck-typed class，以及继承 `ModelBase` 的紧凑 wrapper。private code repo 中的 `examples/+Models` 提供了公开安全参考实现，可先读这些模型再写自己的项目侧模型。
 
 ## 目标
 
@@ -138,4 +138,14 @@ resultRoot = fullfile(expRoot, "results", "my-model-check");
 
 ## 下一步
 
-阅读 [模型接口](../model-interface.md) 查看完整契约，或参考 private code repo 中的 demo models。
+## 可参考的公开示例模型
+
+| 模型 | 接口风格 | 输出类型 | 适合参考的点 |
+| --- | --- | --- | --- |
+| `Models.KMeans` | duck typing | `labels` | 最小 `train(ds, initState)` 和 `ModelStats` 组装 |
+| `Models.NMF` | `ModelBase` | `membership` | `factors.U/V` 初始化与 membership 输出 |
+| `Models.KKM` | `ModelBase` | `labels` | kernel k-means 的 label 输出 |
+| `Models.SymNMF` | `ModelBase` | `membership` | affinity graph 与 symmetric factor |
+| `Models.LoRD` | `ModelBase` | `membership` | 带投影步骤的图分解模型 |
+
+阅读 [模型接口](../model-interface.md) 查看完整契约，或参考 private code repo 中的 `examples/+Models`。
